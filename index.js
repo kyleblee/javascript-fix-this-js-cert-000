@@ -36,7 +36,7 @@ function makePie() {
 }
 
 function updateStatus(statusText) {
-  this.getElementsByClassName("status")[0].innerText = statusText
+  this.getElementsByClassName("status")[0].innerText = statusText;
 }
 
 function bake(updateFunction) {
@@ -47,7 +47,7 @@ function bake(updateFunction) {
 }
 
 function mix(updateFunction) {
-  var status = "Mixing " + this.ingredients.join(", ")
+  var status = "Mixing " + this.ingredients.join(", ") //this line is where the things are getting caught up for now.
   setTimeout(() => {
     bake(updateFunction)
   }, 2000)
@@ -67,9 +67,9 @@ function makeDessert() {
   cakeLink = document.getElementsByClassName('js-make')[0];
   pieLink = document.getElementsByClassName('js-make')[1];
   if (this === cakeLink) {
-    makeCake();
+    makeCake.call(cake);
   } else if (this === pieLink) {
-    makePie();
+    makePie.call(pie);
   } else {
     console.log('neither links were clicked...')
   }
