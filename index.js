@@ -8,8 +8,8 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(function() {
-      updateFunction(serve.apply(this, "Happy Eating!", this.customer))
+    setTimeout(() => { // I changed this to an arrow function instead of function() but that was the only change
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer])) //I added the correct "array" syntax for the arguments of apply, but that was the only change
     }, 2000)
   }
 }
@@ -24,13 +24,15 @@ var pie = {
 }
 
 function makeCake() {
-  var updateCakeStatus;
-  mix(updateCakeStatus)
+  var updateCakeStatus = updateStatus.bind(cake);
+  mix(updateCakeStatus);
 }
 
 function makePie() {
-  var updatePieStatus;
-  mix(updatePieStatus)
+  var updatePieStatus = updateStatus.bind(pie);
+  mix(updatePieStatus);
+  pie.decorate = cake.decorate.bind(pie);
+  pie.decorate(); //not sure why this isn't working for #2. Coming back to it later.
 }
 
 function updateStatus(statusText) {
