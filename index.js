@@ -64,6 +64,15 @@ function cool(updateFunction) {
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
+  cakeLink = document.getElementsByClassName('js-make')[0];
+  pieLink = document.getElementsByClassName('js-make')[1];
+  if (this === cakeLink) {
+    makeCake();
+  } else if (this === pieLink) {
+    makePie();
+  } else {
+    console.log('neither links were clicked...')
+  }
 }
 
 function serve(message, customer) {
