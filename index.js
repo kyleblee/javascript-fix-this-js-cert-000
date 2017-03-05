@@ -8,8 +8,8 @@ var cake = {
   decorate: function(updateFunction) {
     var status = "Decorating with " + this.topping + ". Ready to eat soon!"
     updateFunction(status)
-    setTimeout(() => { // I changed this to an arrow function instead of function() but that was the only change
-      updateFunction(serve.apply(this, ["Happy Eating!", this.customer])) //I added the correct "array" syntax for the arguments of apply, but that was the only change
+    setTimeout(() => {
+      updateFunction(serve.apply(this, ["Happy Eating!", this.customer]))
     }, 2000)
   }
 }
@@ -25,53 +25,52 @@ var pie = {
 
 function makeCake() {
   var updateCakeStatus = updateStatus.bind(this);
-  mix.call(this, updateCakeStatus);
+  updateCakeStatus('Prep');
+  mix.call(cake, updateCakeStatus);
 }
 
 function makePie() {
-  var updatePieStatus = updateStatus.bind(pie);
-  mix(updatePieStatus);
+  var updatePieStatus = updateStatus.bind(this);
+  updatePieStatus('Prep');
   pie.decorate = cake.decorate.bind(pie);
-  pie.decorate(); //not sure why this isn't working for #2. Coming back to it later.
+  mix.call(pie, updatePieStatus);
 }
 
 function updateStatus(statusText) {
   this.getElementsByClassName("status")[0].innerText = statusText;
 }
 
+function mix(updateFunction) {
+  var status = "Mixing " + this.ingredients.join(", ");
+  setTimeout(() => {
+    bake.call(this, updateFunction)
+  }, 2000)
+  updateFunction(status);
+}
+
 function bake(updateFunction) {
   var status = "Baking at " + this.bakeTemp + " for " + this.bakeTime
   setTimeout(() => {
-    cool(updateFunction)
+    cool.call(this, updateFunction)
   }, 2000)
-}
-
-function mix(updateFunction) {
-  var status = "Mixing " + this.ingredients.join(", ") //this line is where the things are getting caught up for now.
-  setTimeout(() => {
-    bake(updateFunction)
-  }, 2000)
-  updateFunction(status)
+  updateFunction(status);
 }
 
 function cool(updateFunction) {
-  var status = "It has to cool! Hands off!"
+  var status = "It has to cool! Hands off!";
   setTimeout(() => {
-    this.decorate(updateFunction)
+      this.decorate(updateFunction)
   }, 2000)
+  updateFunction(status);
 }
 
 function makeDessert() {
   //add code here to decide which make... function to call
   //based on which link was clicked
-  cakeLink = document.getElementsByClassName('js-make')[0];
-  pieLink = document.getElementsByClassName('js-make')[1];
-  if (this === cakeLink) {
-    makeCake.call(cake);
-  } else if (this === pieLink) {
-    makePie.call(pie);
+  if (this.parentNode.id === 'cake') {
+    makeCake.call(this.parentNode);
   } else {
-    console.log('neither links were clicked...')
+    makePie.call(this.parentNode);
   }
 }
 
